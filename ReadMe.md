@@ -1,5 +1,7 @@
 # Chess Engine Test
 
+### Log of steps and my progress into making a chess engine
+
 ## Step 1:
 ### Board representation and setup
 * C++ with WSL environment
