@@ -1,13 +1,18 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++20
+CXXFLAGS = -Wall -Wextra -std=c++20 -Isrc
 
-all: chess_engine
+SRCS = src/main.cpp
 
-chess_engine: main.o
-	$(CXX) $(CXXFLAGS) main.o -o chess_engine
+all: build/chess_engine
 
-main.o: main.cpp bitboard.hpp chessboard.hpp
-	$(CXX) $(CXXFLAGS) -c main.cpp
+build/chess_engine: build/main.o
+	$(CXX) $(CXXFLAGS) build/main.o -o build/chess_engine
+
+build/%.o: src/%.cpp src/bitboard.hpp src/chessboard.hpp
+	mkdir -p build
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f chess_engine *.o
+	rm -rf build *.o
+
+.PHONY: all clean

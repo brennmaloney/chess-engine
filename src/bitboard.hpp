@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <iostream>
 #include <cassert>
+#include <sstream>
+#include <iomanip>
 
 class Bitboard {
 public:
@@ -15,9 +17,11 @@ public:
         return Bitboard(board | (1ULL << square));
     }
     
-    Bitboard clearBit(int square) {
+    Bitboard clearBit(int square) const {
         return Bitboard(board & ~(1ULL << square));
     }
+
+    uint64_t getBits() const { return board; }
     
     bool getBit(int square) {
         return (board & (1ULL << square)) != 0;
@@ -43,6 +47,21 @@ public:
             tempBoard &= tempBoard - 1; // reset LS1B
         }
         return count;
+    }
+    std::string to_string() const {
+        std::stringstream ss;
+        for (int rank = 7; rank >= 0; --rank) {
+            for (int file = 0; file < 8; ++file) {
+                int square = rank * 8 + file;
+                if ((board & (1ULL << square)) != 0) {
+                    ss << "1";
+                } else {
+                    ss << "0";
+                }
+            }
+            ss << "\n";
+        }
+        return ss.str();
     }
     
     // De Bruijn Multiplication
@@ -85,7 +104,7 @@ public:
         return Bitboard(~board);
     }
 private:
-        uint64_t board;
+    uint64_t board;
 };
 
 #endif

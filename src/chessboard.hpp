@@ -24,25 +24,26 @@ enum PieceColour {
 
 class ChessBoard {
 public:
-    ChessBoard() : turn(WHITE), castlingRights(0xF), enPassantSquare(-1), halfMoveClock(0), fullMoveNumber(1) {
-
-    }
+    ChessBoard() : turn(WHITE), castlingRights(0xF), enPassantSquare(-1), halfMoveClock(0), fullMoveNumber(1) {}
 
     void initializeStartingBoard() {
-        whitePawns = Bitboard(0x00FF000000000000ULL);
-        whiteKnights = Bitboard(0x4200000000000000ULL);
-        whiteBishops = Bitboard(0x2400000000000000ULL);
-        whiteRooks = Bitboard(0x8100000000000000ULL);
-        whiteQueens = Bitboard(0x0800000000000000ULL);
-        whiteKings = Bitboard(0x1000000000000000ULL);
+        whitePawns = Bitboard(0x000000000000FF00ULL);
+        whiteKnights = Bitboard(0x0000000000000042ULL);
+        whiteBishops = Bitboard(0x0000000000000024ULL);
+        whiteRooks = Bitboard(0x0000000000000081ULL);
+        whiteQueens = Bitboard(0x0000000000000008ULL);
+        whiteKings = Bitboard(0x0000000000000010ULL);
 
-        blackPawns = Bitboard(0x000000000000FF00ULL);
-        blackKnights = Bitboard(0x0000000000000042ULL);
-        blackBishops = Bitboard(0x0000000000000024ULL);
-        blackRooks = Bitboard(0x0000000000000081ULL);
-        blackQueens = Bitboard(0x0000000000000008ULL);
-        blackKings = Bitboard(0x0000000000000010ULL);
+        blackPawns = Bitboard(0x00FF000000000000ULL);
+        blackKnights = Bitboard(0x4200000000000000ULL);
+        blackBishops = Bitboard(0x2400000000000000ULL);
+        blackRooks = Bitboard(0x8100000000000000ULL);
+        blackQueens = Bitboard(0x0800000000000000ULL);
+        blackKings = Bitboard(0x1000000000000000ULL);
     }
+
+        Bitboard getWhitePawns() const { return whitePawns; }
+    Bitboard getBlackPawns() const { return blackPawns; }
 
     void printBoard() {
         for (int rank = 7; rank >= 0; --rank) {
@@ -86,6 +87,10 @@ public:
         if (((whitePawns | whiteKnights | whiteBishops | whiteRooks | whiteQueens | whiteKings) & squareBoard).popCount() == 1) return WHITE;
         if (((blackPawns | blackKnights | blackBishops | blackRooks | blackQueens | blackKings) & squareBoard).popCount() == 1) return BLACK;
         return NO_COLOUR;
+    }
+
+    int getEnPassantSquare () const {
+        return enPassantSquare;
     }
 
     void placePiece(PieceType piece, PieceColour color, int square){
