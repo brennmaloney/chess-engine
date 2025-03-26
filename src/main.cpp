@@ -12,8 +12,22 @@ std::string pieceColourToString(PieceColour colour) {
 
 int main() {
     ChessBoard board;
-    board.initializeStartingBoard();
     board.printBoard();
-    
+
+    MoveGeneration moveGen(board);
+    // int pawnSquare = 17;
+    // PieceColour pawnColour = BLACK;
+
+    // Bitboard pawnMoves = moveGen.maskPawnAttacks(pawnColour, pawnSquare);
+
+    // pawnMoves.printBitboard();
+
+    std::cout.flush();
+    for (int square = 0; square < 64; ++square) {
+        std::cout << square << std::endl;
+        Bitboard pawnAttacks = moveGen.getPawnAttacks(BLACK, square);
+        pawnAttacks.printBitboard();
+    }
+
     return 0;
 }

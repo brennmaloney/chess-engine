@@ -13,21 +13,27 @@ public:
 
     Bitboard(uint64_t board) : board(board) {}
     
-    Bitboard setBit(int square) const {
-        return Bitboard(board | (1ULL << square));
-    }
-    
     Bitboard clearBit(int square) const {
         return Bitboard(board & ~(1ULL << square));
     }
 
-    uint64_t getBits() const { return board; }
-    
+    Bitboard setBit(int square) const {
+        return Bitboard(board | (1ULL << square));
+    }
     bool getBit(int square) {
         return (board & (1ULL << square)) != 0;
     }
+    uint64_t getBits() const { return board; }
+    int popBit() {
+        if (!board) {
+            return -1;
+        }
+        int square = bitScanForward();
+        board &= board - 1;
+        return square;
+    }
     
-    void print_bitboard() {
+    void printBitboard() {
         for (int rank = 7; rank >= 0; --rank) {
             for (int file = 0; file < 8; ++file) {
                 int square = rank * 8 + file;
@@ -47,21 +53,6 @@ public:
             tempBoard &= tempBoard - 1; // reset LS1B
         }
         return count;
-    }
-    std::string to_string() const {
-        std::stringstream ss;
-        for (int rank = 7; rank >= 0; --rank) {
-            for (int file = 0; file < 8; ++file) {
-                int square = rank * 8 + file;
-                if ((board & (1ULL << square)) != 0) {
-                    ss << "1";
-                } else {
-                    ss << "0";
-                }
-            }
-            ss << "\n";
-        }
-        return ss.str();
     }
     
     // De Bruijn Multiplication
@@ -87,6 +78,11 @@ public:
 
     Bitboard operator|(const Bitboard& other) const {
         return Bitboard(board | other.board);
+    }
+
+    Bitboard operator|=(const Bitboard& other) {
+        board |= other.board;
+        return *this;
     }
 
     Bitboard operator^(const Bitboard& other) const {

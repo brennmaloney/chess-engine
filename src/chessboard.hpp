@@ -24,9 +24,11 @@ enum PieceColour {
 
 class ChessBoard {
 public:
-    ChessBoard() : turn(WHITE), castlingRights(0xF), enPassantSquare(-1), halfMoveClock(0), fullMoveNumber(1) {}
+    ChessBoard() : turn(WHITE), castlingRights(0xF), enPassantSquare(-1), halfMoveClock(0), fullMoveNumber(1) {
+        initStartingBoard();
+    }
 
-    void initializeStartingBoard() {
+    void initStartingBoard() {
         whitePawns = Bitboard(0x000000000000FF00ULL);
         whiteKnights = Bitboard(0x0000000000000042ULL);
         whiteBishops = Bitboard(0x0000000000000024ULL);
@@ -42,27 +44,46 @@ public:
         blackKings = Bitboard(0x1000000000000000ULL);
     }
 
-        Bitboard getWhitePawns() const { return whitePawns; }
+    // getters for pieces
+    Bitboard getWhitePawns() const { return whitePawns; }
+    Bitboard getWhiteKnights() const { return whiteKnights; }
+    Bitboard getWhiteBishops() const { return whiteBishops; }
+    Bitboard getWhiteRooks() const { return whiteRooks; }
+    Bitboard getWhiteQueens() const { return whiteQueens; }
+    Bitboard getWhiteKings() const { return whiteKings; }
+
     Bitboard getBlackPawns() const { return blackPawns; }
+    Bitboard getBlackKnights() const { return blackKnights; }
+    Bitboard getBlackBishops() const { return blackBishops; }
+    Bitboard getBlackRooks() const { return blackRooks; }
+    Bitboard getBlackQueens() const { return blackQueens; }
+    Bitboard getBlackKings() const { return blackKings; }
 
     void printBoard() {
+        std::cout << std::endl;
         for (int rank = 7; rank >= 0; --rank) {
             for (int file = 0; file < 8; ++file) {
                 int square = rank * 8 + file;
                 PieceType piece = getPieceAtSquare(square);
                 PieceColour colour = getColourAtSquare(square);
+                
+                if (file == 0) {
+                    std::cout << rank + 1 << "    ";
+                }
+                
                 char pieceChar = '.';
                 if (piece != NO_PIECE) {
-                    if (colour != WHITE) {
-                        pieceChar = "PNBRQK"[piece];
+                    if (colour == WHITE) {
+                        pieceChar = "PKBRQK"[piece];
                     } else {
-                        pieceChar = "pnbrqk"[piece];
+                        pieceChar = "pkbrqk"[piece];
                     }
                 }
                 std::cout << pieceChar << " ";
             }
             std::cout << std::endl;
         }
+        std::cout << "\n     a b c d e f g h" << std::endl;
     }
 
     PieceType getPieceAtSquare(int square) const {

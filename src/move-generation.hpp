@@ -9,53 +9,55 @@
 
 class MoveGeneration {
 public:
-    MoveGeneration(const ChessBoard& board) : board_(board){}
+    MoveGeneration(const ChessBoard& board) : board_(board) {
+        initMoveMasks();
+        initLeaperAttacks();
+    }
 
-    std::vector<int> pawnMoveGenerator(int square, PieceColour colour) {
-        std::vector<int> moves;
-        int rank = square / 8;
-        int file = square % 8;
-        int direction = (colour  == WHITE) ? 1 : -1;
+    // board masks
+    void initMoveMasks() {
+        notAFile = Bitboard(0xfefefefefefefefeULL);
+        notABFile = Bitboard(0xfcfcfcfcfcfcfcfcULL);
+        notHFile = Bitboard(0x7f7f7f7f7f7f7f7fULL);
+        notGHFile = Bitboard(0x3f3f3f3f3f3f3f3fULL);
+    }
 
-        int pushSquare = square + 8 * direction;
-        if (rank + direction >= 0 && rank + direction < 8 && board_.getPieceAtSquare(pushSquare) == NO_PIECE) {
-            moves.push_back(pushSquare);
-            if((colour == WHITE && rank == 1) || (colour == BLACK && rank == 6)) {
-                int doublePushSquare = square + 16 * direction;
-                if (board_.getPieceAtSquare(doublePushSquare) == NO_PIECE) {
-                    moves.push_back(doublePushSquare);
-                }
-            }
+    void initLeaperAttacks() {
+        for (int square = 0; square < 64; ++square) {
+            pawnAttacks[WHITE][square] = maskPawnAttacks(WHITE, square);
+            pawnAttacks[BLACK][square] = maskPawnAttacks(BLACK, square);
+        }
+    }
+
+    // getters/setters
+    Bitboard getPawnAttacks(PieceColour colour, int square) const {
+        return pawnAttacks[colour][square];
+    }
+
+    Bitboard maskPawnAttacks(PieceColour colour, int square) {
+        Bitboard attacks = Bitboard(0ULL);
+        Bitboard board = Bitboard(1ULL << square);
+
+        if (colour == WHITE) {
+            if (((board >> 7) & notAFile).popCount() > 0) attacks |= (board >> 7);
+            if (((board >> 9) & notHFile).popCount() > 0) attacks |= (board >> 9);
+        } else {
+            if (((board << 7) & notHFile).popCount() > 0) attacks |= (board << 7);
+            if (((board << 9) & notAFile).popCount() > 0) attacks |= (board << 9);
         }
 
-        // check captures on left
-        int captureLeftSquare = square + 7 * direction;
-        if (rank + direction >= 0 && rank + direction < 8 && file > 0 && board_.getPieceAtSquare(captureLeftSquare) != NO_PIECE && board_.getColourAtSquare(captureLeftSquare) != colour) {
-            moves.push_back(captureLeftSquare);
-        }
-        // check captures on right
-        int captureRightSquare = square + 9 * direction;
-        if (rank + direction >= 0 && rank + direction < 8 && file < 7 && board_.getPieceAtSquare(captureRightSquare) != NO_PIECE && board_.getColourAtSquare(captureRightSquare) != colour) {
-            moves.push_back(captureRightSquare);
-        }
-
-        if (board_.getEnPassantSquare() != -1) {
-            if (rank == ((colour == WHITE) ? 4 : 3)) {
-                if (file > 0 && square + 7 * direction == board_.getEnPassantSquare()) {
-                    moves.push_back(square + 7 * direction);
-                }
-                if  (file < 7 && square + 9 * direction == board_.getEnPassantSquare()) {
-                    moves.push_back(square + 9 * direction);
-                }
-            }
-        }
-
-        return moves;
+        return attacks;
     }
 
 private:
     const ChessBoard& board_;
 
+    Bitboard pawnAttacks[2][64];
+
+    Bitboard notAFile;
+    Bitboard notABFile;
+    Bitboard notHFile;
+    Bitboard notGHFile;
 };
 
 
