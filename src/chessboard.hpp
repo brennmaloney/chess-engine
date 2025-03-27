@@ -29,19 +29,19 @@ public:
     }
 
     void initStartingBoard() {
-        whitePawns = Bitboard(0x000000000000FF00ULL);
-        whiteKnights = Bitboard(0x0000000000000042ULL);
-        whiteBishops = Bitboard(0x0000000000000024ULL);
-        whiteRooks = Bitboard(0x0000000000000081ULL);
-        whiteQueens = Bitboard(0x0000000000000008ULL);
-        whiteKings = Bitboard(0x0000000000000010ULL);
+        whitePawns = Bitboard(0x00FF000000000000ULL);
+        whiteKnights = Bitboard(0x4200000000000000ULL);
+        whiteBishops = Bitboard(0x2400000000000000ULL);
+        whiteRooks = Bitboard(0x8100000000000000ULL);
+        whiteQueens = Bitboard(0x0800000000000000ULL);
+        whiteKings = Bitboard(0x1000000000000000ULL);
 
-        blackPawns = Bitboard(0x00FF000000000000ULL);
-        blackKnights = Bitboard(0x4200000000000000ULL);
-        blackBishops = Bitboard(0x2400000000000000ULL);
-        blackRooks = Bitboard(0x8100000000000000ULL);
-        blackQueens = Bitboard(0x0800000000000000ULL);
-        blackKings = Bitboard(0x1000000000000000ULL);
+        blackPawns = Bitboard(0x000000000000FF00ULL);
+        blackKnights = Bitboard(0x0000000000000042ULL);
+        blackBishops = Bitboard(0x0000000000000024ULL);
+        blackRooks = Bitboard(0x0000000000000081ULL);
+        blackQueens = Bitboard(0x0000000000000008ULL);
+        blackKings = Bitboard(0x0000000000000010ULL);
     }
 
     // getters for pieces
@@ -60,15 +60,15 @@ public:
     Bitboard getBlackKings() const { return blackKings; }
 
     void printBoard() {
-        std::cout << std::endl;
-        for (int rank = 7; rank >= 0; --rank) {
+        std::cout << "\nPrint Chessboard" << std::endl;
+        for (int rank = 0; rank < 8; ++rank) {
             for (int file = 0; file < 8; ++file) {
                 int square = rank * 8 + file;
                 PieceType piece = getPieceAtSquare(square);
                 PieceColour colour = getColourAtSquare(square);
                 
                 if (file == 0) {
-                    std::cout << rank + 1 << "    ";
+                    std::cout << 8 - rank << "    ";
                 }
                 
                 char pieceChar = '.';

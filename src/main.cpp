@@ -15,19 +15,24 @@ int main() {
     board.printBoard();
 
     MoveGeneration moveGen(board);
-    // int pawnSquare = 17;
-    // PieceColour pawnColour = BLACK;
 
+    // Square pawnSquare = e4;
+    // PieceColour pawnColour = WHITE;
     // Bitboard pawnMoves = moveGen.maskPawnAttacks(pawnColour, pawnSquare);
 
-    // pawnMoves.printBitboard();
+    // Square knightSquare = a1;
+    // Bitboard knightMoves = moveGen.maskKnightAttacks(knightSquare);
 
-    std::cout.flush();
-    for (int square = 0; square < 64; ++square) {
-        std::cout << square << std::endl;
-        Bitboard pawnAttacks = moveGen.getPawnAttacks(BLACK, square);
-        pawnAttacks.printBitboard();
-    }
+    Square kingSquare = e4;
+    Bitboard kingMoves = moveGen.maskKingAttacks(kingSquare);
+
+    kingMoves.printBitboard();
+
+    // for (int square = 0; square < 64; ++square) {
+    //     std::cout << square << std::endl;
+    //     Bitboard pawnAttacks = moveGen.getPawnAttacks(BLACK, square);
+    //     pawnAttacks.printBitboard();
+    // }
 
     return 0;
 }
